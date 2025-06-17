@@ -4,7 +4,7 @@ This repository aims to experiment with building an automated trading bot for op
 
 ## Tasks
 
-1. **Collect data**: Gather historical option prices, underlying asset data, and relevant market indicators from reliable data vendors.
+1. **Collect data**: Gather historical option prices, underlying asset data, and relevant market indicators from reliable data vendors. The `collect_data.py` script supports a `--sample-dir` option for loading CSV files when network access is unavailable.
 2. **Clean and preprocess**: Handle missing values, adjust for corporate actions (splits, dividends), and align timestamps across data sources.
 3. **Feature engineering**: Create features such as implied volatility, Greeks (delta, gamma, theta, vega), moving averages, and other technical indicators.
 4. **Model selection**: Test a variety of algorithms (e.g., tree-based models, neural networks, reinforcement learning) to forecast option price movements or risk metrics.
