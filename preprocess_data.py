@@ -18,8 +18,8 @@ def preprocess_options(csv_path: Path, underlying_price: float) -> pd.DataFrame:
     """Clean options data and compute simple features."""
     df = pd.read_csv(csv_path)
     df = df.drop_duplicates()
-    df['spread'] = df['Ask'] - df['Bid']
-    df['moneyness'] = (underlying_price - df['Strike']) / df['Strike']
+    df['spread'] = df['ask'] - df['bid']
+    df['moneyness'] = (underlying_price - df['strike']) / df['strike']
     df = df.fillna(0)
     return df
 

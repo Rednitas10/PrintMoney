@@ -34,8 +34,13 @@ def engineer_underlying_features(path: Path) -> pd.DataFrame:
 def engineer_option_features(path: Path, reference_date: pd.Timestamp) -> pd.DataFrame:
     """Add basic option-related features."""
     df = pd.read_csv(path)
-    df['mid_price'] = (df['Bid'] + df['Ask']) / 2
-    df['time_to_expiration'] = (pd.to_datetime(df['expiration']) - reference_date).dt.days
+
+    # Convert expiration to datetime and ensure it's timezone-naive
+    df['expiration'] = pd.to_datetime(df['expiration'])
+    reference_date = pd.to_datetime(reference_date).tz_localize(None)
+
+    df['mid_price'] = (df['bid'] + df['ask']) / 2
+    df['time_to_expiration'] = (df['expiration'] - reference_date).dt.days
     return df
 
 
