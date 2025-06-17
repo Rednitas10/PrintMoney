@@ -2,6 +2,14 @@
 
 This repository aims to experiment with building an automated trading bot for options. Below is a suggested task list for training a model. This is **not** financial advice and profitability is not guaranteed. Proceed at your own risk and consult a professional financial advisor if needed.
 
+## Setup
+
+Install the Python dependencies listed in `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Tasks
 
 1. **Collect data**: Gather historical option prices, underlying asset data, and relevant market indicators from reliable data vendors. The `collect_data.py` script supports a `--sample-dir` option for loading CSV files when network access is unavailable.
@@ -13,6 +21,16 @@ This repository aims to experiment with building an automated trading bot for op
 7. **Paper trading**: Run the strategy in a simulated environment to verify results before committing real capital.
 8. **Deployment**: Automate order execution through a broker API while monitoring latency and system reliability.
 9. **Monitoring and iteration**: Continuously track live performance, retrain the model with new data, and refine features or parameters as needed.
+
+## Reinforcement Learning Training
+
+After generating features, run the PPO training script:
+
+```bash
+python reinforcement_model.py features/underlying_features.csv --timesteps 100000
+```
+
+Increase the `--timesteps` argument to train for longer (e.g., overnight).
 
 ## Visual Dashboard
 
