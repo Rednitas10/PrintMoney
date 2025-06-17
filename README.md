@@ -41,6 +41,13 @@ launch `dashboard.py` with Streamlit to view key metrics:
 streamlit run dashboard.py
 ```
 
+If you see a `streamlit` command not found error, try running:
+
+```bash
+python -m streamlit run dashboard.py
+```
+or ensure that your Python Scripts directory is on the system `PATH`.
+
 The dashboard displays price charts with moving averages, RSI and volatility
 curves, the latest model accuracy scores, and a snapshot of recent option
 features.
