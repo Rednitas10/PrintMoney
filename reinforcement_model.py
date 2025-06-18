@@ -8,6 +8,7 @@ try:
     from gym import spaces
     from stable_baselines3 import PPO
     from stable_baselines3.common.vec_env import DummyVecEnv
+    from stable_baselines3.common.callbacks import EvalCallback
 except ImportError as exc:  # pragma: no cover - handle missing dependency
     raise RuntimeError(
         "stable-baselines3 and gym are required. Try `pip install stable-baselines3 gym`."
@@ -60,21 +61,49 @@ def main() -> None:
         help="CSV from feature_engineering.py containing underlying features",
     )
     parser.add_argument(
-        "--output", default="models", help="Directory to store the trained RL model"
+        "--output",
+        default="models",
+        help="Directory to store the trained RL model and logs",
     )
     parser.add_argument(
         "--timesteps", type=int, default=50000, help="Number of training timesteps"
+    )
+    parser.add_argument(
+        "--learning-rate",
+        type=float,
+        default=3e-4,
+        help="Learning rate for PPO",
+    )
+    parser.add_argument(
+        "--eval-freq",
+        type=int,
+        default=10000,
+        help="Evaluate the agent every N steps",
     )
     args = parser.parse_args()
 
     df = pd.read_csv(args.underlying_features, parse_dates=["Date"])
     env = DummyVecEnv([lambda: TradingEnv(df)])
-
-    model = PPO("MlpPolicy", env, verbose=1)
-    model.learn(total_timesteps=args.timesteps)
-
     output_dir = Path(args.output)
     output_dir.mkdir(exist_ok=True)
+
+    eval_env = DummyVecEnv([lambda: TradingEnv(df)])
+    eval_callback = EvalCallback(
+        eval_env,
+        best_model_save_path=str(output_dir),
+        log_path=str(output_dir),
+        eval_freq=args.eval_freq,
+        n_eval_episodes=5,
+        deterministic=True,
+    )
+
+    model = PPO(
+        "MlpPolicy",
+        env,
+        learning_rate=args.learning_rate,
+        verbose=1,
+    )
+    model.learn(total_timesteps=args.timesteps, callback=eval_callback)
     model_path = output_dir / "ppo_trading"
     model.save(model_path)
     print(f"Saved RL model to {model_path}")

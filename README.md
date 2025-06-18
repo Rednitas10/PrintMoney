@@ -31,6 +31,16 @@ python reinforcement_model.py features/underlying_features.csv --timesteps 10000
 ```
 
 Increase the `--timesteps` argument to train for longer (e.g., overnight).
+You can also tune the learning rate and evaluation frequency:
+
+```bash
+python reinforcement_model.py features/underlying_features.csv \
+    --timesteps 200000 --learning-rate 1e-4 --eval-freq 5000
+```
+
+During training, the script evaluates the agent every `--eval-freq` steps and
+logs the mean episode reward in the output directory. The best-performing model
+is saved automatically, allowing you to gauge improvement across iterations.
 
 ## Visual Dashboard
 
