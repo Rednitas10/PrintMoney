@@ -31,6 +31,16 @@ python reinforcement_model.py features/underlying_features.csv --timesteps 10000
 ```
 
 Increase the `--timesteps` argument to train for longer (e.g., overnight).
+You can also tune the learning rate and evaluation frequency:
+
+```bash
+python reinforcement_model.py features/underlying_features.csv \
+    --timesteps 200000 --learning-rate 1e-4 --eval-freq 5000
+```
+
+During training, the script evaluates the agent every `--eval-freq` steps and
+logs the mean episode reward in the output directory. The best-performing model
+is saved automatically, allowing you to gauge improvement across iterations.
 
 ## Visual Dashboard
 
@@ -51,6 +61,38 @@ or ensure that your Python Scripts directory is on the system `PATH`.
 The dashboard displays price charts with moving averages, RSI and volatility
 curves, the latest model accuracy scores, and a snapshot of recent option
 features.
+
+## Webull Paper Trading
+
+This project can integrate with the unofficial `webull` Python package to
+submit simulated trades. Install the package (also included in
+`requirements.txt`):
+
+```bash
+python3 -m pip install webull
+```
+
+Authenticate with the `paper_webull` class and send orders:
+
+```python
+from webull import paper_webull
+wb = paper_webull()
+wb.login('your_email', 'your_password')
+wb.get_trade_token('123456')  # your trade PIN
+wb.place_order(stock='AAPL', price=90.0, qty=2)
+```
+
+If Multi-Factor Authentication (MFA) is enabled, request codes with
+`wb.get_mfa()` and `wb.get_security()` before logging in. You may view or
+cancel orders with:
+
+```python
+orders = wb.get_current_orders()
+wb.cancel_all_orders()
+```
+
+These commands operate on Webull's paper trading environment. Review Webull's
+documentation and disclaimers before executing live trades.
 
 ## Disclaimer
 
