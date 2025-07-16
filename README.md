@@ -93,6 +93,18 @@ wb.cancel_all_orders()
 
 These commands operate on Webull's paper trading environment. Review Webull's
 documentation and disclaimers before executing live trades.
+## Gap and Go / HOD Scanner Tasks
+
+Use the following checklist to track progress on integrating Ross Cameron's real-time scanner strategy:
+
+- [ ] Research Ross Cameron's criteria
+- [ ] Add real-time data access
+- [ ] Create a new `scanners/` package
+- [ ] Add alerting mechanisms
+- [ ] Update or expand the Streamlit dashboard
+- [ ] Integrate with existing code (optional)
+- [ ] Testing and reliability
+- [ ] Documentation
 
 ## Disclaimer
 
