@@ -97,14 +97,29 @@ documentation and disclaimers before executing live trades.
 
 Use the following checklist to track progress on integrating Ross Cameron's real-time scanner strategy:
 
-- [ ] Research Ross Cameron's criteria
-- [ ] Add real-time data access
-- [ ] Create a new `scanners/` package
-- [ ] Add alerting mechanisms
-- [ ] Update or expand the Streamlit dashboard
+- [x] Research Ross Cameron's criteria
+- [x] Add real-time data access
+- [x] Create a new `scanners/` package
+- [x] Add alerting mechanisms
+- [x] Update or expand the Streamlit dashboard
 - [ ] Integrate with existing code (optional)
 - [ ] Testing and reliability
-- [ ] Documentation
+- [x] Documentation
+
+### Ross Cameron Criteria
+
+The new ``scanners`` package implements a lightweight version of Ross Cameron's
+Gap and Go playbook. Stocks are scanned for an opening gap of at least ``4%``
+relative to the prior close and for new highs compared to the previous day.  The
+scanners obtain recent prices using ``yfinance`` with optional fallback to CSV
+files for offline development.  Alerts are printed with timestamps and the
+results can be viewed in the Streamlit dashboard.
+
+Run the scanners directly from the command line:
+
+```bash
+python -m scanners.scanner_cli AAPL MSFT --gap-threshold 0.05
+```
 
 ## Disclaimer
 
