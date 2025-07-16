@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 
+from scanners import scan_gappers, scan_hod_breakouts
+
 
 def load_data(feature_dir: str = "features", model_dir: str = "models"):
     """Load engineered features and model scores."""
@@ -40,6 +42,20 @@ def main() -> None:
 
     st.subheader("Latest Option Features")
     st.dataframe(options_df.tail())
+
+    st.subheader("Gap and Go Scanner (sample)")
+    gappers = scan_gappers(["AAPL"], sample_dir=Path("sample_data"))
+    if not gappers.empty:
+        st.table(gappers)
+    else:
+        st.write("No gappers found.")
+
+    st.subheader("HOD Breakouts (sample)")
+    breakouts = scan_hod_breakouts(["AAPL"], sample_dir=Path("sample_data"))
+    if not breakouts.empty:
+        st.table(breakouts)
+    else:
+        st.write("No breakouts found.")
 
 
 if __name__ == "__main__":
