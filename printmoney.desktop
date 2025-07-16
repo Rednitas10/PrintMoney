@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=PrintMoney Dashboard
+Comment=Launch trading dashboard with scanners
+Exec=/path/to/PrintMoney/launch_app.sh
+Icon=utilities-terminal
+Terminal=true
