@@ -121,6 +121,37 @@ Run the scanners directly from the command line:
 python -m scanners.scanner_cli AAPL MSFT --gap-threshold 0.05
 ```
 
+## Desktop Launcher
+
+To start the dashboard with the scanners automatically, use the provided
+`launch_app.sh` script and desktop shortcut:
+
+1. Ensure all dependencies are installed:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Make the launcher executable:
+
+   ```bash
+   chmod +x launch_app.sh
+   ```
+
+3. Edit `printmoney.desktop` so the `Exec` path points to the absolute
+   location of `launch_app.sh`. Copy the file to your desktop or to
+   `~/.local/share/applications/` to add it to your application menu.
+
+4. Double‑click the icon to run the scanners and open the Streamlit
+   dashboard in your browser. Any tickers specified in the `Exec`
+   command are passed through to the scanners.
+
+Example to run from the terminal:
+
+```bash
+./launch_app.sh AAPL MSFT
+```
+
 ## Disclaimer
 
 This project is for educational purposes only. Trading options involves significant risk, and no outcome is guaranteed. You are solely responsible for any trades executed using code or models derived from this repository.
