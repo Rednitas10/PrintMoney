@@ -1,2 +1,0 @@
-logistic_regression=0.4667
-random_forest=0.5333
