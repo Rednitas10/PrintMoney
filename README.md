@@ -1,157 +1,33 @@
-# PrintMoney
+# Day Dash Prototype
 
-This repository aims to experiment with building an automated trading bot for options. Below is a suggested task list for training a model. This is **not** financial advice and profitability is not guaranteed. Proceed at your own risk and consult a professional financial advisor if needed.
+This repository is a fresh start toward building an open source trading dashboard inspired by Ross Cameron's **Day Dash**. The previous automated trading bot code has been removed to focus on creating a streamlined interface for monitoring the market and running simple scanners.
 
-## Setup
+## Vision
 
-Install the Python dependencies listed in `requirements.txt`:
+The goal is to provide a lightweight dashboard that shows real‑time price action, watch lists and scan results. The project is in its earliest stages and currently only contains a minimal Streamlit app.
+
+## Planned Roadmap
+
+1. **Real‑time Data Feed** – Integrate a data provider such as `yfinance` or a broker API to stream live prices.
+2. **Gap & Go Scanner** – Implement a morning gap scanner similar to the one featured in Day Dash. Results will be displayed directly on the dashboard.
+3. **Watch Lists** – Allow users to maintain custom watch lists that update intraday with price and volume information.
+4. **Charting Widgets** – Add candlestick charts, moving averages and other basic indicators using libraries like Plotly.
+5. **Notifications** – Provide optional alerts (email or desktop) when scan criteria are met or key levels are reached.
+6. **Deployment** – Package the app so it can be run locally or deployed to a small cloud instance.
+
+This outline is subject to change as the project evolves.
+
+## Running the Prototype
+
+Install the requirements and start the Streamlit app:
 
 ```bash
 pip install -r requirements.txt
+streamlit run dashboard/app.py
 ```
 
-## Tasks
-
-1. **Collect data**: Gather historical option prices, underlying asset data, and relevant market indicators from reliable data vendors. The `collect_data.py` script supports a `--sample-dir` option for loading CSV files when network access is unavailable.
-2. **Clean and preprocess**: Handle missing values, adjust for corporate actions (splits, dividends), and align timestamps across data sources. The `preprocess_data.py` script generates cleaned CSV files with basic features like moving averages.
-3. **Feature engineering**: Create additional features such as implied volatility, Greeks (delta, gamma, theta, vega), moving averages, and other technical indicators. The `feature_engineering.py` script illustrates a simple approach for adding RSI, volatility, and option time to expiration.
-4. **Model selection**: Test a variety of algorithms (e.g., tree-based models, neural networks, reinforcement learning) to forecast option price movements or risk metrics. The `model_selection.py` script provides a simple logistic regression and random forest baseline. For reinforcement learning experimentation, see `reinforcement_model.py`, which trains a basic agent using PPO. It can be run with a high number of timesteps to train overnight.
-5. **Backtesting**: Evaluate the model on historical data with realistic transaction costs and slippage to assess performance and drawdowns.
-6. **Risk management**: Define position sizing rules and risk limits (e.g., maximum exposure per trade, stop-loss thresholds).
-7. **Paper trading**: Run the strategy in a simulated environment to verify results before committing real capital.
-8. **Deployment**: Automate order execution through a broker API while monitoring latency and system reliability.
-9. **Monitoring and iteration**: Continuously track live performance, retrain the model with new data, and refine features or parameters as needed.
-
-## Reinforcement Learning Training
-
-After generating features, run the PPO training script:
-
-```bash
-python reinforcement_model.py features/underlying_features.csv --timesteps 100000
-```
-
-Increase the `--timesteps` argument to train for longer (e.g., overnight).
-You can also tune the learning rate and evaluation frequency:
-
-```bash
-python reinforcement_model.py features/underlying_features.csv \
-    --timesteps 200000 --learning-rate 1e-4 --eval-freq 5000
-```
-
-During training, the script evaluates the agent every `--eval-freq` steps and
-logs the mean episode reward in the output directory. The best-performing model
-is saved automatically, allowing you to gauge improvement across iterations.
-
-## Visual Dashboard
-
-After running the preprocessing, feature engineering, and model selection steps,
-launch `dashboard.py` with Streamlit to view key metrics:
-
-```bash
-streamlit run dashboard.py
-```
-
-If you see a `streamlit` command not found error, try running:
-
-```bash
-python -m streamlit run dashboard.py
-```
-or ensure that your Python Scripts directory is on the system `PATH`.
-
-The dashboard displays price charts with moving averages, RSI and volatility
-curves, the latest model accuracy scores, and a snapshot of recent option
-features.
-
-## Webull Paper Trading
-
-This project can integrate with the unofficial `webull` Python package to
-submit simulated trades. Install the package (also included in
-`requirements.txt`):
-
-```bash
-python3 -m pip install webull
-```
-
-Authenticate with the `paper_webull` class and send orders:
-
-```python
-from webull import paper_webull
-wb = paper_webull()
-wb.login('your_email', 'your_password')
-wb.get_trade_token('123456')  # your trade PIN
-wb.place_order(stock='AAPL', price=90.0, qty=2)
-```
-
-If Multi-Factor Authentication (MFA) is enabled, request codes with
-`wb.get_mfa()` and `wb.get_security()` before logging in. You may view or
-cancel orders with:
-
-```python
-orders = wb.get_current_orders()
-wb.cancel_all_orders()
-```
-
-These commands operate on Webull's paper trading environment. Review Webull's
-documentation and disclaimers before executing live trades.
-## Gap and Go / HOD Scanner Tasks
-
-Use the following checklist to track progress on integrating Ross Cameron's real-time scanner strategy:
-
-- [x] Research Ross Cameron's criteria
-- [x] Add real-time data access
-- [x] Create a new `scanners/` package
-- [x] Add alerting mechanisms
-- [x] Update or expand the Streamlit dashboard
-- [ ] Integrate with existing code (optional)
-- [ ] Testing and reliability
-- [x] Documentation
-
-### Ross Cameron Criteria
-
-The new ``scanners`` package implements a lightweight version of Ross Cameron's
-Gap and Go playbook. Stocks are scanned for an opening gap of at least ``4%``
-relative to the prior close and for new highs compared to the previous day.  The
-scanners obtain recent prices using ``yfinance`` with optional fallback to CSV
-files for offline development.  Alerts are printed with timestamps and the
-results can be viewed in the Streamlit dashboard.
-
-Run the scanners directly from the command line:
-
-```bash
-python -m scanners.scanner_cli AAPL MSFT --gap-threshold 0.05
-```
-
-## Desktop Launcher
-
-To start the dashboard with the scanners automatically, use the provided
-`launch_app.sh` script and desktop shortcut:
-
-1. Ensure all dependencies are installed:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. Make the launcher executable:
-
-   ```bash
-   chmod +x launch_app.sh
-   ```
-
-3. Edit `printmoney.desktop` so the `Exec` path points to the absolute
-   location of `launch_app.sh`. Copy the file to your desktop or to
-   `~/.local/share/applications/` to add it to your application menu.
-
-4. Double‑click the icon to run the scanners and open the Streamlit
-   dashboard in your browser. Any tickers specified in the `Exec`
-   command are passed through to the scanners.
-
-Example to run from the terminal:
-
-```bash
-./launch_app.sh AAPL MSFT
-```
+The current app only displays a placeholder message, but it serves as the foundation for future features.
 
 ## Disclaimer
 
-This project is for educational purposes only. Trading options involves significant risk, and no outcome is guaranteed. You are solely responsible for any trades executed using code or models derived from this repository.
+This project is for educational purposes only. No trading advice is provided and you are solely responsible for your trading decisions.
